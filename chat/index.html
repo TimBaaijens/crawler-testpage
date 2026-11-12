@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<title>Chattest app-context</title>
+</head>
+<body>
+<main>
+<h1>Chattest: app-context meegeven</h1>
+<p>Testpagina voor T-06. Deze pagina geeft een verborgen pre-chat-veld <code>SystemKey</code> mee aan Enhanced Chat (Devilionx).
+Kies de app met <code>?app=</code> in de URL, bijvoorbeeld <a href="?app=luscii">?app=luscii</a> of <a href="?app=voorbeeldapp">?app=voorbeeldapp</a>.</p>
+<p>Huidige SystemKey: <strong id="key"></strong></p>
+<p><small>Fictieve testpagina; niet gelinkt vanaf de rest van de site, zodat de crawler hem niet oppakt.</small></p>
+</main>
+<script type="text/javascript">
+	var systemKey = (new URLSearchParams(window.location.search).get('app') || 'luscii').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 80);
+	document.getElementById('key').textContent = systemKey;
+
+	window.addEventListener('onEmbeddedMessagingReady', function () {
+		embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({ SystemKey: systemKey });
+	});
+
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'nl_NL';
+			embeddedservice_bootstrap.init(
+				'00Dba0000033QlpEAE',
+				'KnowledgeContextTest',
+				'https://helpdeskdigitalezorg--devilionx.sandbox.my.site.com/ESWKnowledgeConte1794506695771',
+				{
+					scrt2URL: 'https://helpdeskdigitalezorg--devilionx.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type="text/javascript" src="https://helpdeskdigitalezorg--devilionx.sandbox.my.site.com/ESWKnowledgeConte1794506695771/assets/js/bootstrap.min.js" onload="initEmbeddedMessaging()"></script>
+</body>
+</html>
