@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<title>Chattest HDZ External Agent: app-context</title>
+</head>
+<body>
+<main>
+<h1>Chattest HDZ External Agent (taak 7.1)</h1>
+<p>Testpagina voor de patiëntchat (Embedded Service-deployment <code>HDZ_External_Agent</code>, Devilionx). Deze pagina geeft de verborgen pre-chatvelden <code>SystemKey</code> en <code>PageUrl</code> mee.
+Kies de app met <code>?app=</code>, bijvoorbeeld <a href="?app=luscii&amp;utm_source=test#stap2">?app=luscii</a>. De querystring en het fragment horen niet in <code>PageUrl</code> terecht te komen.</p>
+<p>SystemKey: <strong id="key"></strong><br>PageUrl: <strong id="page"></strong></p>
+<p><small>Fictieve testpagina; niet gelinkt vanaf de rest van de site.</small></p>
+</main>
+<script type="text/javascript">
+	var systemKey = (new URLSearchParams(window.location.search).get('app') || 'luscii').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 80);
+	// Bewust met querystring: de routing-flow moet die verwijderen.
+	var pageUrl = window.location.href.slice(0, 255);
+	document.getElementById('key').textContent = systemKey;
+	document.getElementById('page').textContent = pageUrl;
+
+	window.addEventListener('onEmbeddedMessagingReady', function () {
+		embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({ SystemKey: systemKey, PageUrl: pageUrl });
+	});
+
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'nl_NL';
+			embeddedservice_bootstrap.init(
+				'00Dba0000033QlpEAE',
+				'HDZ_External_Agent',
+				'https://helpdeskdigitalezorg--devilionx.sandbox.my.site.com/ESWHDZExternalAgent1783491947001',
+				{
+					scrt2URL: 'https://helpdeskdigitalezorg--devilionx.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type="text/javascript" src="https://helpdeskdigitalezorg--devilionx.sandbox.my.site.com/ESWHDZExternalAgent1783491947001/assets/js/bootstrap.min.js" onload="initEmbeddedMessaging()"></script>
+</body>
+</html>
